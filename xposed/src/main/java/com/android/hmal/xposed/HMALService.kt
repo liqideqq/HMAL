@@ -40,7 +40,7 @@ class HMALService(val pms: IPackageManager) : IHMALService.Stub() {
             }
         }
         File("/data/misc").list()?.forEach {
-            if (it.startsWith("hma1-")) {
+            if (it.startsWith("hma¹-")) {
                 if (!this::dataDir.isInitialized) {
                     dataDir = "/data/misc/$it"
                 } else if (dataDir != "/data/misc/$it") {
@@ -49,7 +49,7 @@ class HMALService(val pms: IPackageManager) : IHMALService.Stub() {
             }
         }
         if (!this::dataDir.isInitialized) {
-            dataDir = "/data/misc/hma1-" + Utils.generateRandomString(4) + "-" + Utils.generateRandomString(4) + "-" + Utils.generateRandomString(4) + "-" + Utils.generateRandomString(4)
+            dataDir = "/data/misc/hma¹-" + Utils.generateRandomString(4) + "-" + Utils.generateRandomString(4) + "-" + Utils.generateRandomString(4) + "-" + Utils.generateRandomString(4)
         }
 
         File("$dataDir/log").mkdirs()
