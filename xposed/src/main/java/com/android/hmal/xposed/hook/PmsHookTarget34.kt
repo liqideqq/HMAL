@@ -11,11 +11,12 @@ import icu.nullptr.hidemyapplist.common.Constants
 import icu.nullptr.hidemyapplist.xposed.*
 import java.util.concurrent.atomic.AtomicReference
 
-@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-class PmsHookTarget34(private val service: HMAService) : IFrameworkHook {
+@TargetApi(Build.VERSION_CODES.TIRAMISU)
+class PmsHookTarget34(private val service: HMALService) : IFrameworkHook {
 
     companion object {
-        private const val TAG = "HMA-PHT34"
+        private const val TAG = "HMAL-PHT34"
+    }
 
     private val getPackagesForUidMethod by lazy {
         findMethod("com.android.server.pm.Computer") {
