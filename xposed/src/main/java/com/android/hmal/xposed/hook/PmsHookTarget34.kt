@@ -1,14 +1,12 @@
-package icu.nullptr.hidemyapplist.xposed.hook
+package com.android.hmal.xposed.hook
 
-import android.os.Binder
+import android.annotation.TargetApi
 import android.os.Build
-import androidx.annotation.RequiresApi
 import com.github.kyuubiran.ezxhelper.utils.findMethod
-import com.github.kyuubiran.ezxhelper.utils.findMethodOrNull
 import com.github.kyuubiran.ezxhelper.utils.hookBefore
 import de.robv.android.xposed.XC_MethodHook
-import icu.nullptr.hidemyapplist.common.Constants
-import icu.nullptr.hidemyapplist.xposed.*
+import com.android.hmal.common.Constants
+import com.android.hmal.xposed.*
 import java.util.concurrent.atomic.AtomicReference
 
 @TargetApi(Build.VERSION_CODES.TIRAMISU)
@@ -43,30 +41,6 @@ class PmsHookTarget34(private val service: HMALService) : IFrameworkHook {
                 for (caller in callingApps) {
                     if (service.shouldHide(caller, targetApp)) {
                         param.result = true
-                        val last = lastFilteredApp.getAndSet(caller)
-                        return@hookBefore
-                    }
-                }
-            }.onFailure {
-                unload()
-            }
-        }
-
-        // Hook: PMS#getArchivedPackageInternal (QPR2+)
-        exphook = findMethodOrNull("com.android.server.pm.PackageManagerService", findSuper = true) {
-            name == "getArchivedPackageInternal"
-        }?.hookBefore { param ->
-            runCatching {
-                val callingUid = Binder.getCallingUid()
-                if (callingUid == Constants.UID_SYSTEM) return@hookBefore
-                val callingApps = Utils.binderLocalScope {
-                    service.pms.getPackagesForUid(callingUid)
-                } ?: return@hookBefore
-                val targetApp = param.args[0].toString()
-                for (caller in callingApps) {
-                    if (service.shouldHide(caller, targetApp)) {
-                        param.result = null
-                        service.filterCount++
                         val last = lastFilteredApp.getAndSet(caller)
                         return@hookBefore
                     }
