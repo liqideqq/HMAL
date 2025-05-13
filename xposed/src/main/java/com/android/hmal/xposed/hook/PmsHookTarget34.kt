@@ -1,17 +1,17 @@
-package com.android.hmal.xposed.hook
+package com.android.hmal.common.xposed.hook
 
+import android.annotation.TargetApi
 import android.os.Binder
 import android.os.Build
-import androidx.annotation.RequiresApi
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.findMethodOrNull
 import com.github.kyuubiran.ezxhelper.utils.hookBefore
 import de.robv.android.xposed.XC_MethodHook
-import com.android.hmal.common.Constants
-import com.android.hmal.xposed.*
+import com.android.hmal.common.common.Constants
+import com.android.hmal.common.xposed.*
 import java.util.concurrent.atomic.AtomicReference
 
-@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+@TargetApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 class PmsHookTarget34(private val service: HMALService) : IFrameworkHook {
 
     companion object {
@@ -30,7 +30,6 @@ class PmsHookTarget34(private val service: HMALService) : IFrameworkHook {
 
     @Suppress("UNCHECKED_CAST")
     override fun load() {
-        logI(TAG, "Load hook")
         hook = findMethod("com.android.server.pm.AppsFilterImpl", findSuper = true) {
             name == "shouldFilterApplication"
         }.hookBefore { param ->
