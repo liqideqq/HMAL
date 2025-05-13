@@ -25,12 +25,10 @@ class PmsHookTarget34(private val service: HMALService) : IFrameworkHook {
     }
 
     private var hook: XC_MethodHook.Unhook? = null
-    private var exphook: XC_MethodHook.Unhook? = null
-    private val lastFilteredApp = AtomicReference<String?>()
+    private var lastFilteredApp: AtomicReference<String?> = AtomicReference(null)
 
     @Suppress("UNCHECKED_CAST")
     override fun load() {
-        // Hook: AppsFilterImpl#shouldFilterApplication
         hook = findMethod("com.android.server.pm.AppsFilterImpl", findSuper = true) {
             name == "shouldFilterApplication"
         }.hookBefore { param ->
@@ -41,11 +39,11 @@ class PmsHookTarget34(private val service: HMALService) : IFrameworkHook {
                 val callingApps = Utils.binderLocalScope {
                     getPackagesForUidMethod.invoke(snapshot, callingUid) as Array<String>?
                 } ?: return@hookBefore
-                val targetApp = Utils.getPackageNameFromPackageSettings(param.args[3])
+                val targetApp = Utils.getPackageNameFromPackageSettings(param.args[3]) // PackageSettings <- PackageStateInternal
                 for (caller in callingApps) {
                     if (service.shouldHide(caller, targetApp)) {
                         param.result = true
-                        lastFilteredApp.getAndSet(caller)
+                        val last = lastFilteredApp.getAndSet(caller)
                         return@hookBefore
                     }
                 }
@@ -68,7 +66,8 @@ class PmsHookTarget34(private val service: HMALService) : IFrameworkHook {
                 for (caller in callingApps) {
                     if (service.shouldHide(caller, targetApp)) {
                         param.result = null
-                        lastFilteredApp.getAndSet(caller)
+                        service.filterCount++
+                        val last = lastFilteredApp.getAndSet(caller)
                         return@hookBefore
                     }
                 }
