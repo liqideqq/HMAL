@@ -93,8 +93,6 @@ class HMALService(val pms: IPackageManager) : IHMALService.Stub() {
             frameworkHooks.add(ZygoteArgsHook(this))
         }
         
-        frameworkHooks.add(StartActivityHook(this))
-        
         frameworkHooks.forEach(IFrameworkHook::load)
     }
 
