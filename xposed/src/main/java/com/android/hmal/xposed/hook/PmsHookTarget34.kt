@@ -1,4 +1,4 @@
-package com.android.hmal.common.xposed.hook
+package com.android.hmal.xposed.hook
 
 import android.annotation.TargetApi
 import android.os.Binder
@@ -7,8 +7,8 @@ import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.findMethodOrNull
 import com.github.kyuubiran.ezxhelper.utils.hookBefore
 import de.robv.android.xposed.XC_MethodHook
-import com.android.hmal.common.common.Constants
-import com.android.hmal.common.xposed.*
+import com.android.hmal.common.Constants
+import com.android.hmal.xposed.*
 import java.util.concurrent.atomic.AtomicReference
 
 @TargetApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
