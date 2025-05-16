@@ -83,8 +83,10 @@ class HMALService(val pms: IPackageManager) : IHMALService.Stub() {
             frameworkHooks.add(PmsHookTarget33(this))
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             frameworkHooks.add(PmsHookTarget30(this))
-        } else {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             frameworkHooks.add(PmsHookTarget28(this))
+        } else {
+            frameworkHooks.add(PmsHookLegacy(this))
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
