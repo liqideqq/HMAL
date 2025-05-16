@@ -90,9 +90,9 @@ class HMALService(val pms: IPackageManager) : IHMALService.Stub() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            frameworkHooks.add(PlatformCompatHook(this))
+            frameworkHooks.add(ZygoteArgsHook(this))
         }
-        
+
         frameworkHooks.forEach(IFrameworkHook::load)
     }
 
